@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'LS_AzureDataLakeStorageG2'"
 		},
+		"LS_AzureSqlDatabase_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_AzureSqlDatabase'"
+		},
 		"LS_AzureDataLakeStorageG2_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adlsproject1ipldata.dfs.core.windows.net/"
@@ -48,6 +52,9 @@
 					},
 					"LS_AzureDataLakeStorageG2_accountKey": {
 						"value": "[parameters('LS_AzureDataLakeStorageG2_accountKey')]"
+					},
+					"LS_AzureSqlDatabase_connectionString": {
+						"value": "[parameters('LS_AzureSqlDatabase_connectionString')]"
 					},
 					"LS_AzureDataLakeStorageG2_properties_typeProperties_url": {
 						"value": "[parameters('LS_AzureDataLakeStorageG2_properties_typeProperties_url')]"

@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'LS_AzureDataLakeStorageG2'"
 		},
+		"LS_AzureSqlDatabase_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_AzureSqlDatabase'"
+		},
 		"LS_AzureDataLakeStorageG2_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adlsproject1ipldata.dfs.core.windows.net/"
@@ -37,6 +41,19 @@
 						"type": "SecureString",
 						"value": "[parameters('LS_AzureDataLakeStorageG2_accountKey')]"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_AzureSqlDatabase')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('LS_AzureSqlDatabase_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -227,6 +244,27 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_http_for_git')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_fifa_sql_table')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "tbl_FIFAData"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_AzureSqlDatabase')]"
 			]
 		},
 		{

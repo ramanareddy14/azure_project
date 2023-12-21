@@ -8,6 +8,9 @@
 		"LS_AzureDataLakeStorageG2_accountKey": {
 			"value": ""
 		},
+		"LS_AzureSqlDatabase_connectionString": {
+			"value": ""
+		},
 		"LS_AzureDataLakeStorageG2_properties_typeProperties_url": {
 			"value": "https://adlsproject1ipldata.dfs.core.windows.net/"
 		},
