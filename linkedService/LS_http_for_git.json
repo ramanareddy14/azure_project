@@ -1,0 +1,14 @@
+{
+	"name": "LS_http_for_git",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "https://github.com/ramanareddy14/project1_ipldata_adf/tree/main/",
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://github.com/ramanareddy14/project1_ipldata_adf/raw/main/",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}

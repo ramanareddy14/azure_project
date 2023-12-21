@@ -1,0 +1,32 @@
+{
+	"name": "dataset_source_IPL_2009_csv_wp",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_http_for_git",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"pFilenameS": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@dataset().pFilenameS",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"rowDelimiter": "\n",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

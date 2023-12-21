@@ -1,0 +1,9 @@
+{
+	"name": "datafactoryp1ipldata",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "27da2f09-81fe-4950-b9b3-fea81bcce42c",
+		"tenantId": "fa5d4eab-a71a-46c8-83fa-a83eb299d019"
+	}
+}
