@@ -112,7 +112,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> releventColumns",
-				"ExistingHashValues exists(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"ExistingHashValues exists(') == ERROR_FUNCTION(',",
 				"     negate:false,",
 				"     broadcast: 'auto')~> exists1",
 				"ExistingHashValues, checkForNewData exists(ExistingHashValues@id_hash == CalNewHashVlaues@ID_Hash,",
