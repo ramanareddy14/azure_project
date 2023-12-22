@@ -1,0 +1,92 @@
+{
+	"name": "DF_FIFA_SCD",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_fifa_lake",
+						"type": "DatasetReference"
+					},
+					"name": "newDatacsv"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_fifa_sql_table",
+						"type": "DatasetReference"
+					},
+					"name": "existingdata"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "CalNewHashVlaues"
+				},
+				{
+					"name": "ExistingHashValues"
+				},
+				{
+					"name": "checkForNewData"
+				},
+				{
+					"name": "AddSurrogateKey"
+				},
+				{
+					"name": "Maxskey"
+				},
+				{
+					"name": "joinMaxSkey"
+				},
+				{
+					"name": "CalculateExtraColumn",
+					"description": "overwriting skey"
+				},
+				{
+					"name": "releventColumns",
+					"description": "selecting only required columns omitting some interim derived columns"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     parameter_ID as string ('ID'),",
+				"     parameter_SCD as string ('Club,Wage,Position')",
+				"}",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> newDatacsv",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> existingdata",
+				"newDatacsv derive(ID_Hash = md5(byName($parameter_ID)),",
+				"          SCD_Hash = md5(byNames(split($parameter_SCD,',')))) ~> CalNewHashVlaues",
+				"existingdata derive(id_hash = md5(byName($parameter_ID)),",
+				"          SCD_hash = md5(byNames(split($parameter_SCD,',')))) ~> ExistingHashValues",
+				"CalNewHashVlaues, ExistingHashValues exists(CalNewHashVlaues@ID_Hash == ExistingHashValues@id_hash",
+				"     && CalNewHashVlaues@SCD_Hash == ExistingHashValues@SCD_hash,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> checkForNewData",
+				"checkForNewData keyGenerate(output(SKey as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> AddSurrogateKey",
+				"ExistingHashValues aggregate(MaxSkey = max(toInteger(byName('Skey')))) ~> Maxskey",
+				"AddSurrogateKey, Maxskey join(MaxSkey==SKey||true(),",
+				"     joinType:'cross',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joinMaxSkey",
+				"joinMaxSkey derive(SKey = SKey+ iifNull(MaxSkey,0),",
+				"          Active = 1,",
+				"          ActiveStartTime = currentUTC(),",
+				"          ActiveEndTime = toTimestamp(toString(null()))) ~> CalculateExtraColumn",
+				"CalculateExtraColumn select(mapColumn(",
+				"          each(match(name!='ID_Hash'&&name!='SCD_Hash'&&name!='MaxSkey'))",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> releventColumns"
+			]
+		}
+	}
+}
